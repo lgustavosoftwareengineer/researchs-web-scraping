@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "puppeteer": "^20.4.0"
+  },
+  "name": "researchs-web-scraping",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Luiz Gustavo <luiz.matias@upe.br>",
+  "license": "MIT"
+}

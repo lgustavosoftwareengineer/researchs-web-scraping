@@ -7,7 +7,7 @@ async function getResearchGateArticles() {
   );
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: "new",
   });
   const page = await browser.newPage();
 
@@ -64,7 +64,23 @@ async function getArticlesFromAPage(page) {
     ];
     const RESEARCH_GATE_URL = "https://www.researchgate.net/";
 
-    return Array.from(
+    const years = Array.from(
+      document.querySelectorAll(
+        ".nova-legacy-e-list.nova-legacy-e-list--size-m.nova-legacy-e-list--type-inline.nova-legacy-e-list--spacing-none.nova-legacy-v-publication-item__meta-data"
+      ),
+      (element) => {
+        const contentIndex = 0;
+        const dateString = element.children[contentIndex].innerHTML.replace(
+          /\D/g,
+          ""
+        );
+        const dateToNumber = Number(dateString);
+
+        return dateToNumber;
+      }
+    ).filter(Boolean);
+
+    const articles = Array.from(
       document.querySelectorAll(
         ".nova-legacy-e-link.nova-legacy-e-link--color-inherit.nova-legacy-e-link--theme-bare"
       ),
@@ -82,31 +98,31 @@ async function getArticlesFromAPage(page) {
         };
       }
     ).filter(Boolean);
+
+    const onlyValidArticles = articles
+      .map(({ articleTitle, articleLink }, index) => {
+        const year = years[index];
+
+        if (year) {
+          const isDateBetweenSpecificRange = year >= 2018 && year <= 2023;
+
+          if (isDateBetweenSpecificRange) {
+            return {
+              articleTitle,
+              year,
+              articleLink,
+            };
+          }
+        }
+      })
+      .filter(Boolean);
+
+    return onlyValidArticles;
   });
 }
 function generateCSV(articlesParams = []) {
   const articles = [
-    { articleTitle: "articleTitle", articleLink: "articleLink" },
-    ...articlesParams,
-  ];
-
-  const newArticles = articles.map((element) => Object.values(element));
-
-  let csvContent = "";
-
-  newArticles.forEach(function (rowArray) {
-    let row = rowArray.join(",");
-    csvContent += row + "\n";
-  });
-
-  return csvContent;
-}
-
-const wait = (ms) => new Promise((res) => setTimeout(res, ms));
-
-function generateCSV(articlesParams = []) {
-  const articles = [
-    { articleTitle: "articleTitle", articleLink: "articleLink" },
+    { articleTitle: "articleTitle", year: "year", articleLink: "articleLink" },
     ...articlesParams,
   ];
 
@@ -121,5 +137,6 @@ function generateCSV(articlesParams = []) {
 
   return csvContent;
 }
+const wait = (ms) => new Promise((res) => setTimeout(res, ms));
 
 module.exports = { getResearchGateArticles };

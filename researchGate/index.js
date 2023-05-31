@@ -115,7 +115,7 @@ function generateCSV(articlesParams = []) {
   let csvContent = "";
 
   newArticles.forEach(function (rowArray) {
-    let row = rowArray.join(";");
+    let row = rowArray.join("!");
     csvContent += row + "\n";
   });
 

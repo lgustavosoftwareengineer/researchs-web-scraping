@@ -29,7 +29,7 @@ async function getGoogleScholarArticles() {
   for (let i = 1; i <= FINAL_PAGE; i++) {
     await autoScroll(page);
 
-    i !== 13 &&
+    i !== FINAL_PAGE &&
       (await page.click('button[type="button"][aria-label="Next"].gs_btnPR'));
     await wait(2000);
 

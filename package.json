@@ -1,10 +1,15 @@
 {
   "dependencies": {
+    "dotenv": "^16.3.1",
     "puppeteer": "^20.4.0"
   },
   "name": "researchs-web-scraping",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Luiz Gustavo <luiz.matias@upe.br>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start:crawler": "node crawler/main.js",
+    "start:shorts": "node shorts/main.mjs"
+  }
 }
